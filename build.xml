@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." name="DNS53Server" default="maven.deploy" >
+	<property name="name" value="DNS53Server" />
+	<property environment="env"/>
+	<property file="${user.home}/${name}.properties"/>
+	<property file="${user.home}/build.properties"/>
+	<property name="config.filename" value="${user.name}.properties"/>
+	<property file="${config.filename}"/>
+	<property file="build.properties"/>
+	<property name="project.base.dir" value="." />
+	<property name="src" value="${project.base.dir}/src" />
+	<property name="resources" value="${project.base.dir}/resources" />
+	<property name="WebContent" value="${project.base.dir}/WebContent" />
+	<property name="test" value="${project.base.dir}/test" />
+	<property name="build" value="${project.base.dir}/build" />
+	<property name="war" value="${build}/war" />
+	<property name="dist" value="${project.base.dir}/dist" />
+	<property name="bind" value="${project.base.dir}/bind" />
+	<property name="classes" value="${war}/WEB-INF/classes" />
+	<property name="warlib" value="${war}/WEB-INF/lib" />
+	<property name="lib" value="${build}/lib" />
+	<property name="external" value="${build}/external" />
+	<property name="external.dir" location="${external}" />
+	<property name="external.jars" value="${build}/external/lib" />
+	<property name="hudson.url" value="jenkins.momentumsoftware.com:8080/" />
+	<property name="target.war" value="${lib}/DNS53Server.war"/>
+    <property name="dist.suffix" value="" />
+    <property name="toughresources" value="TopStackResources${dist.suffix}" />
+    <property name="toughresources.dir" value="${project.base.dir}/../${toughresources}"/>
+
+	<property name="dns53client.path" value="com/msi/dns53/client" />
+	<property name="dnsutil.path" value="com/msi/dns53/queryutil" />
+	<property name="maven.compat" value="true"/>
+
+	<import file="${toughresources.dir}/common.build.xml" />
+
+
+  <property name="scheduler.enabled" value="true" />
+	<path id="project.classpath">
+		<pathelement location="${classes}"/>
+		<pathelement location="${test.classes}"/>
+		<pathelement location="${test.resources}"/>
+		<pathelement location="${toughresources.dir}/resources"/>
+		<fileset dir="${warlib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${classes}" />
+		<mkdir dir="${warlib}" />
+		<mkdir dir="${lib}" />
+		<mkdir dir="${external}" />
+		<mkdir dir="${external.jars}" />
+	</target>
+
+	<target name="compile.test" depends="compile.src" if="test.dir.exists">
+		<delete dir="${test.classes}"/>
+		<mkdir dir="${test.classes}"/>
+		<unzip dest="${test.classes}" src="${external}/tough-resources-config.zip" />
+		<copy file="${env.core.properties}" todir="${test.classes}" overwrite="true"/>
+		<echo message="Classpath = ${myclasspath}" />
+	    <property name="myclasspath" refid="test.path" />
+	    <javac debug="on" includeantruntime="false"
+	        memoryMaximumSize="256m" memoryInitialSize="256m" fork="true" destdir="${test.classes}">
+	        <src path="${test}" />
+	        <classpath refid="test.path" />
+	    </javac>
+	</target>
+
+	<target name="jar.client" depends="compile.src">
+	    <jar destfile="${lib}/${name}-client.jar">
+	        <fileset dir="${classes}">
+	            <include name="**/${dns53client.path}/**/*.properties" />
+	            <include name="**/${dns53client.path}/**/*.class" />
+	        	<include name="**/${dnsutil.path}/**/*.class" />
+	        </fileset>
+	    	<fileset dir = "${src}">
+	    		<include name="**/${dns53client.path}/**/*.properties" />
+	    	</fileset>
+	    </jar>
+	</target>
+
+	<target name="dist" depends="war.all, jar.client">
+	    <mkdir dir="${dist}" />
+	    <war.all.generic warfile="${dist}/${name}.war" dist="true">
+	        <war-lib-patterns/>
+	        <war-classes>
+	            <metainf dir="${WebContent}/META-INF">
+	                <include name="context.xml"/>
+	            </metainf>
+	        </war-classes>
+	    </war.all.generic>
+		<copy todir="${dist}">
+			<fileset dir="${lib}">
+				<include name="*-bundled.tar.gz"/>
+				<include name="${name}-client.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="war.all" depends="compile.src, copy.config" >
+		<war.all.maven>
+			<war-lib-patterns/>
+			<war-classes>
+	            <metainf dir="${WebContent}/META-INF">
+	                <include name="context.xml"/>
+	            </metainf>
+	        </war-classes>
+		</war.all.maven>
+		<copy todir="${lib}">
+			<fileset dir="${bind}">
+				<include name="*-bundled.tar.gz"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deployLocal"
+	    description="Deploys the built war file to an Apache Tomcat server.">
+	    <copy file="${target.war}" todir="${tomcat.dir}/webapps" overwrite="true"/>
+	</target>
+
+	<target name="maven.deploy" depends="jar.client, dist, maven.deploy.war.n.client" />
+
+</project>

@@ -1,0 +1,5 @@
+<!ELEMENT CreateHostedZoneRequest (Name, CallerReference, HostedZoneConfig?)>
+<!ELEMENT Name (#PCDATA)>
+<!ELEMENT CallerReference (#PCDATA)>
+<!ELEMENT HostedZoneConfig (Comment?)>
+<!ELEMENT Comment (#PCDATA)>

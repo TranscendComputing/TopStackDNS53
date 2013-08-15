@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <!-- DNS53 Classes -->
+  <mapping class="com.msi.dns53.model.DNS53HostedZone"/>
+  <mapping class="com.msi.dns53.model.DNS53ResourceRecord"/>
+  </session-factory>
+</hibernate-configuration>

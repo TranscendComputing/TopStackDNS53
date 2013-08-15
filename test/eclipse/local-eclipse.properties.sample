@@ -1,0 +1,39 @@
+# Environment settings for local development build/deploy.
+# Please do not modify this file; if you need to change these properties,
+# override in a build.properties; see build.properties.sample for details.
+
+#sqs.host=localhost
+#sqs.host=172.31.255.30
+
+#ec2.endpoint=http://euca3fe.momentumsoftware.com:8773/services/Eucalyptus
+ec2.endpoint=http://essexfe.momentumsoftware.com:8773/services/Cloud
+
+default.availability.zone=nova
+
+#deploy.ip=172.31.255.1
+#deploy.ip=dk-sandbox
+deploy.ip=localhost
+#deploy.ip=172.31.255.5
+deploy.password=tomcat
+deploy.username=tomcat
+db.password=msiIsCool
+
+chef.env=_default
+
+flyway.user=msi
+flyway.password=msiIsCool
+flyway.driver=com.mysql.jdbc.Driver
+flyway.url=jdbc:mysql://${deploy.ip}:3306/msi
+
+#test.accessKey=TEST_ACCESS_KEY
+#test.secretKey=TEST_SECRET_KEY
+#test.sqs.accessKey=ak
+#test.sqs.secretKey=sk
+
+# Test user creds for dev env (euca)
+#test.accessKey=WN9OL5XUHV41VCOIE4G3C
+#test.secretKey=KYZBgtrhprNxwhvRp0tpwD4FNjr6jA8J4OmemhEg
+
+# Test user creds for dev env (essex)
+test.accessKey=buildbot
+test.secretKey=buildbot

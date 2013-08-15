@@ -1,0 +1,16 @@
+options {
+  directory "/var/named";
+  version "aegjiae320adf2q30asdfjq12q30gfe";
+};
+logging{
+   channel named_log{
+	file "/var/log/named.log" versions 3 size 2m;
+	severity info;
+	print-severity yes;
+	print-time yes;
+ 	print-category yes;
+   };
+   category default{
+   named_log;
+ };
+};
