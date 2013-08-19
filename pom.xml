@@ -17,7 +17,8 @@
     <url>http://www.transcendcomputing.com</url>
 
     <properties>
-            <jersey-version>1.13</jersey-version>
+        <jersey-version>1.13</jersey-version>
+        <org.springframework.version>3.1.4.RELEASE</org.springframework.version>
     </properties>
 
     <dependencies>
@@ -66,6 +67,13 @@
             <groupId>org.dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
             <version>2.0.6</version>
+        </dependency>
+        <!-- test dependency -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.transcendcomputing.topstack</groupId>
