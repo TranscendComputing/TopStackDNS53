@@ -46,14 +46,14 @@
 	<bean id="secretKey" class="java.lang.String">
 		<constructor-arg value="${test.secretKey}"/>
 	</bean>
-	
+
 	<bean id="customDNS53Client" class="com.msi.dns53.client.DNS53Client">
 		<constructor-arg value="http://${deploy.ip}:8080/DNS53Server/2012-02-29/hostedzone" />
 		<constructor-arg value="http://${deploy.ip}:8080/DNS53Server/2012-02-29/change" />
 		<constructor-arg value="${test.accessKey}" />
 		<constructor-arg value="${test.secretKey}" />
 	</bean>
-	
+
 	<!-- https://${deploy.ip}:8443/DNS53Server is redirecting ${deploy.ip} host into the target host; /etc/hosts must be set with this value -->
 	<bean class="com.amazonaws.services.route53.AmazonRoute53Client">
 		<constructor-arg ref="basicAWSCredentials" />
@@ -65,13 +65,13 @@
 			<value>${default.availability.zone}</value>
 		</constructor-arg>
 	</bean>
-	
+
 	<!-- ============================== -->
     <bean id="testDS" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="${flyway.url}" />
-        <property name="username" value="${flyway.user}" />
-        <property name="password" value="${flyway.password}" />
+        <property name="url" value="jdbc:mysql://${deploy.ip}:3306/${db.user}" />
+        <property name="username" value="${db.user}" />
+        <property name="password" value="${db.password}" />
         <property name="defaultAutoCommit" value="false"></property>
         <property name="initialSize" value="1"></property>
         <property name="maxActive" value="20"></property>
@@ -86,8 +86,8 @@
         <property name="removeAbandoned" value="true"></property>
         <property name="LogAbandoned" value="true"></property>
     </bean>
-	
-	
+
+
     <bean id="sessionFactory"
         class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
         <property name="dataSource" ref="testDS" />
